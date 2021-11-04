@@ -1,5 +1,5 @@
 <template>
-  <header class="h-auto flex flex-col justify-center items-center lg:py-10">
+  <header class="h-auto flex flex-col justify-center items-center md:py-10">
     <h1 class="text-5xl text-green-500 font-bold text-center my-4">
       Rick & Morty <span class="text-2xl text-black">Personajes</span>
     </h1>
@@ -22,28 +22,11 @@
 
   <main class="mx-6 lg:mx-20">
     <ul class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-      <li v-for="character of characters" v-bind:key="character.id">
-        <article class="flex flex-col m-1 shadow-md">
-          <img v-bind:src="character.image" v-bind:alt="character.name" />
-          <div class="w-full m-4">
-            <h2 class="font-bold text-xl mb-2">{{ character.name }}</h2>
-            <button
-              class="
-                bg-green-400
-                w-30
-                p-3
-                text-white
-                rounded-2xl
-                font-bold
-                hover:bg-green-500
-                active:bg-green-800
-              "
-            >
-              Ver más
-            </button>
-          </div>
-        </article>
-      </li>
+      <Character
+        v-for="character of characters"
+        v-bind:key="character.id"
+        v-bind:character="character"
+      />
     </ul>
   </main>
 </template>
@@ -51,10 +34,18 @@
 <script>
 import axios from 'axios';
 
+import Character from './components/Character.vue';
+
 export default {
   name: 'App',
+  components: {
+    Character,
+  },
   data() {
     return { URL: 'https://rickandmortyapi.com/api/character', characters: [] };
+  },
+  created() {
+    this.fetch();
   },
   methods: {
     fetch() {
