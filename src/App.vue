@@ -20,6 +20,60 @@
     </button>
   </header>
 
+  <nav>
+    <ul class="flex my-4 justify-center">
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-white
+            rounded
+            hover:border-gray-200
+            text-blue-500
+            hover:bg-gray-200
+            py-1
+            px-3
+          "
+          href="#"
+          v-on:click="changePage(page - 1)"
+          >Anterior</a
+        >
+      </li>
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-blue-500
+            rounded
+            py-1
+            px-3
+            bg-blue-500
+            text-white
+          "
+          href="#"
+          >{{ page }}</a
+        >
+      </li>
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-white
+            rounded
+            hover:border-gray-200
+            text-blue-500
+            hover:bg-gray-200
+            py-1
+            px-3
+          "
+          href="#"
+          v-on:click="changePage(page + 1)"
+          >Siguiente</a
+        >
+      </li>
+    </ul>
+  </nav>
+
   <main class="mx-6 lg:mx-20">
     <ul class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
       <Character
@@ -29,6 +83,60 @@
       />
     </ul>
   </main>
+
+  <nav>
+    <ul class="flex my-4 justify-center">
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-white
+            rounded
+            hover:border-gray-200
+            text-blue-500
+            hover:bg-gray-200
+            py-1
+            px-3
+          "
+          href="#"
+          v-on:click="changePage(page - 1)"
+          >Anterior</a
+        >
+      </li>
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-blue-500
+            rounded
+            py-1
+            px-3
+            bg-blue-500
+            text-white
+          "
+          href="#"
+          >{{ page }}</a
+        >
+      </li>
+      <li class="mr-3">
+        <a
+          class="
+            inline-block
+            border border-white
+            rounded
+            hover:border-gray-200
+            text-blue-500
+            hover:bg-gray-200
+            py-1
+            px-3
+          "
+          href="#"
+          v-on:click="changePage(page + 1)"
+          >Siguiente</a
+        >
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script>
@@ -42,22 +150,36 @@ export default {
     Character,
   },
   data() {
-    return { URL: 'https://rickandmortyapi.com/api/character', characters: [] };
+    return {
+      URL: 'https://rickandmortyapi.com/api/character',
+      characters: [],
+      page: 1,
+      pages: 1,
+    };
   },
   created() {
     this.fetch();
   },
   methods: {
     fetch() {
+      const params = {
+        page: this.page,
+      };
+
       let result = axios
-        .get(this.URL)
+        .get(this.URL, { params })
         .then((res) => {
           this.characters = res.data.results;
+          this.pages = res.data.info.pages;
           console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    changePage(page) {
+      this.page = page <= 0 || page > this.pages ? this.page : page;
+      this.fetch();
     },
   },
 };
