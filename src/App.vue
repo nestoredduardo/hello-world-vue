@@ -3,21 +3,42 @@
     <h1 class="text-5xl text-green-500 font-bold text-center my-4">
       Rick & Morty <span class="text-2xl text-black">Personajes</span>
     </h1>
-    <button
-      v-on:click="fetch"
-      class="
-        bg-green-400
-        w-30
-        p-4
-        text-white
-        rounded-2xl
-        font-bold
-        hover:bg-green-500
-        active:bg-green-800
-      "
+
+    <form
+      action="submit"
+      v-on:submit.prevent="searchData"
+      v-on:keyup.enter="searchData"
+      class="flex items-center w-full justify-center"
     >
-      Consultar
-    </button>
+      <input
+        type="text"
+        v-model="search"
+        class="
+          w-5/12
+          text-sm
+          p-3
+          mr-2
+          border-2 border-blue-500
+          rounded-md
+          focus:outline-none focus:bg-blue-300
+        "
+      />
+
+      <button
+        class="
+          bg-green-400
+          w-30
+          p-4
+          text-white
+          rounded-2xl
+          font-bold
+          hover:bg-green-500
+          active:bg-green-800
+        "
+      >
+        Buscar
+      </button>
+    </form>
   </header>
 
   <nav>
@@ -155,6 +176,7 @@ export default {
       characters: [],
       page: 1,
       pages: 1,
+      search: '',
     };
   },
   created() {
@@ -164,6 +186,7 @@ export default {
     fetch() {
       const params = {
         page: this.page,
+        name: this.search,
       };
 
       let result = axios
@@ -179,6 +202,11 @@ export default {
     },
     changePage(page) {
       this.page = page <= 0 || page > this.pages ? this.page : page;
+      this.fetch();
+    },
+    searchData() {
+      console.log(this.search);
+      this.page = 1;
       this.fetch();
     },
   },
