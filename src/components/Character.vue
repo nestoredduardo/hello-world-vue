@@ -18,6 +18,7 @@
           hover:bg-green-500
           active:bg-green-800
         "
+        @click="showMore(character.id)"
       >
         Ver más
       </button>
@@ -28,5 +29,11 @@
 <script>
 export default {
   props: ['character'],
+  methods: {
+    showMore(id) {
+      this.$emit('showModal', id);
+    },
+  },
+  emits: ['showModal'],
 };
 </script>

@@ -1,4 +1,62 @@
 <template>
+  <div
+    class="fixed w-full h-full z-10 bg-black bg-opacity-75"
+    v-if="modal"
+  ></div>
+
+  <section
+    class="
+      fixed
+      z-20
+      bg-white
+      modal
+      p-8
+      rounded-xl
+      w-1/2
+      flex flex-col
+      items-center
+    "
+    v-if="modal"
+  >
+    <h1 class="text-5xl font-bold text-green-500">
+      {{ currentCharacter.name }}
+    </h1>
+    <img
+      v-bind:src="currentCharacter.image"
+      v-bind:alt="currentCharacter.name"
+      class="rounded-full w-60 h-60 my-4"
+    />
+    <h2 class="font-semibold text-3xl">Género</h2>
+    <p class="font-medium text-2xl text-blue-500 mb-3">
+      {{ currentCharacter.gender }}
+    </p>
+    <h2 class="font-semibold text-3xl">Estatus</h2>
+    <p class="font-medium text-2xl text-blue-500 mb-3">
+      {{ currentCharacter.status }}
+    </p>
+    <h2 class="font-semibold text-3xl">Especie</h2>
+    <p class="font-medium text-2xl text-blue-500 mb-3">
+      {{ currentCharacter.species }}
+    </p>
+    <h2 class="font-semibold text-3xl">Tipo</h2>
+    <p class="font-medium text-2xl text-blue-500 mb-3">
+      {{ currentCharacter.type || 'No hay datos' }}
+    </p>
+    <button
+      @click="() => (modal = false)"
+      class="
+        border border-blue-500
+        rounded
+        py-1
+        px-3
+        bg-blue-500
+        text-white text-2xl
+      "
+    >
+      Cerrar
+    </button>
+  </section>
+
   <header class="h-auto flex flex-col justify-center items-center md:py-10">
     <h1 class="text-5xl text-green-500 font-bold text-center my-4">
       Rick & Morty <span class="text-2xl text-black">Personajes</span>
@@ -98,6 +156,7 @@
   <main class="mx-6 lg:mx-20">
     <ul class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
       <Character
+        @showModal="showModal"
         v-for="character of characters"
         v-bind:key="character.id"
         v-bind:character="character"
@@ -177,6 +236,8 @@ export default {
       page: 1,
       pages: 1,
       search: '',
+      modal: false,
+      currentCharacter: [],
     };
   },
   created() {
@@ -209,8 +270,27 @@ export default {
       this.page = 1;
       this.fetch();
     },
+    showModal(id) {
+      this.fetchOne(id);
+    },
+    async fetchOne(id) {
+      const result = await axios.get(
+        `https://rickandmortyapi.com/api/character/${id}`
+      );
+
+      this.currentCharacter = result.data;
+      this.modal = true;
+
+      console.log(this.currentCharacter);
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+.modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
